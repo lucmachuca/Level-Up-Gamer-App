@@ -1,4 +1,4 @@
-package com.example.levelup_gamerapp.ui.theme
+package com.example.levelup_gamerapp.view.theme
 
 import androidx.compose.ui.graphics.Color
 
