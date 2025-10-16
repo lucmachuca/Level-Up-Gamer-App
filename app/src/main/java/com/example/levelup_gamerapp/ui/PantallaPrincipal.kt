@@ -1,4 +1,4 @@
-package com.example.levelup_gamerapp
+package com.example.levelup_gamerapp.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,9 +8,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,63 +20,128 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.launch
 
-// Modelo simple de producto
+// -------------------------
+// MODELOS DE DATOS
+// -------------------------
 data class Producto(
     val nombre: String,
     val precio: String,
     val imagenUrl: String
 )
 
-// Modelo simple de categoría
 data class Categoria(
     val nombre: String,
     val iconUrl: String
 )
 
+// -------------------------
+// PANTALLA PRINCIPAL
+// -------------------------
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaPrincipal() {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "LEVEL-UP GAMER",
-                        color = Color(0xFF39FF14),
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /*TODO: abrir menú lateral*/ }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menú",
-                            tint = Color(0xFF39FF14)
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                drawerContainerColor = Color.Black,
+                drawerContentColor = Color.White,
+                modifier = Modifier.width(300.dp)
+            ) {
+                // Header con botón de cerrar
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { scope.launch { drawerState.close() } }) {
+                        Icon(Icons.Default.Close, contentDescription = "Cerrar menú", tint = Color(0xFF39FF14))
+                    }
+                }
+
+                // Título
+                Text(
+                    text = "LEVEL-UP GAMER",
+                    color = Color(0xFF39FF14),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Items del drawer
+                val drawerItems = listOf(
+                    "Inicio" to Icons.Default.Home,
+                    "Productos" to Icons.Default.ShoppingCart,
+                    "Nosotros" to Icons.Default.Info,
+                    "Blog" to Icons.Default.Info,
+                    "Contacto" to Icons.Default.Email,
+                    "Mi cuenta" to Icons.Default.AccountCircle
+                )
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    drawerItems.forEach { (label, icon) ->
+                        NavigationDrawerItem(
+                            label = { Text(label, color = Color.White) },
+                            selected = false,
+                            onClick = {
+                                scope.launch {
+                                    drawerState.close()
+                                    snackbarHostState.showSnackbar("$label seleccionado")
+                                }
+                            },
+                            icon = { Icon(icon, contentDescription = null, tint = Color.White) },
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                         )
                     }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Black
+                }
+            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menú", tint = Color(0xFF39FF14))
+                        }
+                    },
+                    title = { Text("LEVEL-UP GAMER", color = Color(0xFF39FF14), fontWeight = FontWeight.Bold) },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Black)
                 )
-            )
-        },
-        containerColor = Color.Black
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(Color.Black)
-        ) {
-            item { BannerPrincipal() }
-            item { ProductosDestacados() }
-            item { CategoriasSeccion() }
-            item { FooterSeccion() }
+            },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            containerColor = Color.Black
+        ) { innerPadding ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .background(Color.Black)
+            ) {
+                item { BannerPrincipal() }
+                item { ProductosDestacados() }
+                item { CategoriasSeccion() }
+                item { FooterSeccion() }
+            }
         }
     }
 }
 
+// -------------------------
+// BANNER PRINCIPAL
+// -------------------------
 @Composable
 fun BannerPrincipal() {
     Box(
@@ -99,21 +164,15 @@ fun BannerPrincipal() {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "PRODUCTOS DESTACADOS",
-                color = Color(0xFF39FF14),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Lo más vendido esta semana",
-                color = Color(0xFF1E90FF),
-                fontSize = 16.sp
-            )
+            Text("PRODUCTOS DESTACADOS", color = Color(0xFF39FF14), fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            Text("Lo más vendido esta semana", color = Color(0xFF1E90FF), fontSize = 16.sp)
         }
     }
 }
 
+// -------------------------
+// PRODUCTOS DESTACADOS
+// -------------------------
 @Composable
 fun ProductosDestacados() {
     val productos = listOf(
@@ -123,13 +182,7 @@ fun ProductosDestacados() {
         Producto("Silla Gamer Razer", "$189.990", "https://cdn.mos.cms.futurecdn.net/epdKe7LXYbD7nAJ9KUQ6t8.jpg")
     )
 
-    Text(
-        text = "Destacados",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color.White,
-        modifier = Modifier.padding(16.dp)
-    )
+    Text("Destacados", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White, modifier = Modifier.padding(16.dp))
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -167,6 +220,9 @@ fun ProductosDestacados() {
     }
 }
 
+// -------------------------
+// CATEGORÍAS
+// -------------------------
 @Composable
 fun CategoriasSeccion() {
     val categorias = listOf(
@@ -176,13 +232,7 @@ fun CategoriasSeccion() {
         Categoria("Componentes", "https://img.icons8.com/?size=100&id=cnYTrlcPnC0e&format=png&color=39ff14")
     )
 
-    Text(
-        text = "Explora por Categorías",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        color = Color(0xFF1E90FF),
-        modifier = Modifier.padding(16.dp)
-    )
+    Text("Explora por Categorías", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF1E90FF), modifier = Modifier.padding(16.dp))
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -216,6 +266,9 @@ fun CategoriasSeccion() {
     }
 }
 
+// -------------------------
+// FOOTER
+// -------------------------
 @Composable
 fun FooterSeccion() {
     Column(
@@ -233,5 +286,3 @@ fun FooterSeccion() {
         )
     }
 }
-
-
