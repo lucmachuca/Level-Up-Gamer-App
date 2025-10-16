@@ -1,4 +1,4 @@
-package com.example.levelup_gamerapp.view.theme
+package com.example.levelup_gamerapp.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
