@@ -2,10 +2,14 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt") // ✅ Necesario para Room
 }
+
+
 
 android {
     namespace = "com.example.levelup_gamerapp"
+
     compileSdk {
         version = release(36)
     }
@@ -29,13 +33,16 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
@@ -50,6 +57,16 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    // ROOM (base de datos local)
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    // COIL (carga de imágenes)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    // ViewModel para Jetpack Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    // Jetpack Navigation para Compose
+    implementation("androidx.navigation:navigation-compose:2.8.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
