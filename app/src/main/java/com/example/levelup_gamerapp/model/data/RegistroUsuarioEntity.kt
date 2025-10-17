@@ -1,6 +1,8 @@
 package com.example.levelup_gamerapp.model.data
 
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 
 @Entity(tableName = "usuario")
 data class RegistroUsuarioEntity(@PrimaryKey(autoGenerate = true)
