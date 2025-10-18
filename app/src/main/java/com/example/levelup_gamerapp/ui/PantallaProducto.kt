@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.levelup_gamerapp.local.AppDatabase
 import com.example.levelup_gamerapp.local.ProductosEntity
 import com.example.levelup_gamerapp.repository.ProductosRepository
@@ -31,6 +32,7 @@ fun PantallaProducto(id: Int, onNavigateBack: () -> Unit) {
 
     var producto by remember { mutableStateOf<ProductosEntity?>(null) }
 
+    // Carga segura del producto
     LaunchedEffect(id) {
         withContext(Dispatchers.IO) {
             producto = repo.obtenerProductos().find { it.id == id }
@@ -43,7 +45,11 @@ fun PantallaProducto(id: Int, onNavigateBack: () -> Unit) {
                 title = { Text("Detalle del producto", color = Color(0xFF39FF14)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color(0xFF39FF14))
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = Color(0xFF39FF14)
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Black)
@@ -60,8 +66,18 @@ fun PantallaProducto(id: Int, onNavigateBack: () -> Unit) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Imagen protegida
+                val painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(context)
+                        .data(prod.imagenUrl)
+                        .crossfade(true)
+                        .error(android.R.drawable.ic_menu_report_image)
+                        .placeholder(android.R.drawable.ic_menu_gallery)
+                        .build()
+                )
+
                 Image(
-                    painter = rememberAsyncImagePainter(prod.imagenUrl),
+                    painter = painter,
                     contentDescription = prod.nombre,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -70,10 +86,30 @@ fun PantallaProducto(id: Int, onNavigateBack: () -> Unit) {
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(prod.nombre, color = Color(0xFF39FF14), fontSize = 22.sp, fontWeight = FontWeight.Bold)
-                Text("$${prod.precio}", color = Color(0xFF1E90FF), fontSize = 18.sp, modifier = Modifier.padding(8.dp))
-                Text(prod.descripcion, color = Color.White, fontSize = 14.sp, textAlign = TextAlign.Center)
-                Text("Categoría: ${prod.categoria}", color = Color.Gray, fontSize = 12.sp)
+                Text(
+                    text = prod.nombre,
+                    color = Color(0xFF39FF14),
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "$${String.format("%.0f", prod.precio)}",
+                    color = Color(0xFF1E90FF),
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(8.dp)
+                )
+                Text(
+                    text = prod.descripcion,
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = "Categoría: ${prod.categoria}",
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
             }
         } ?: Box(
             modifier = Modifier.fillMaxSize(),
