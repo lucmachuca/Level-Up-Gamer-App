@@ -19,12 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 
-// -------------------------
-// MODELOS DE DATOS
-// -------------------------
 data class Producto(
     val nombre: String,
     val precio: String,
@@ -36,12 +34,9 @@ data class Categoria(
     val iconUrl: String
 )
 
-// -------------------------
-// PANTALLA PRINCIPAL
-// -------------------------
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaPrincipal() {
+fun PantallaPrincipal(navController: NavHostController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -54,7 +49,6 @@ fun PantallaPrincipal() {
                 drawerContentColor = Color.White,
                 modifier = Modifier.width(300.dp)
             ) {
-                // Header con botón de cerrar
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -67,7 +61,6 @@ fun PantallaPrincipal() {
                     }
                 }
 
-                // Título
                 Text(
                     text = "LEVEL-UP GAMER",
                     color = Color(0xFF39FF14),
@@ -80,14 +73,10 @@ fun PantallaPrincipal() {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Items del drawer
                 val drawerItems = listOf(
                     "Inicio" to Icons.Default.Home,
                     "Productos" to Icons.Default.ShoppingCart,
-                    "Nosotros" to Icons.Default.Info,
-                    "Blog" to Icons.Default.Info,
-                    "Contacto" to Icons.Default.Email,
-                    "Mi cuenta" to Icons.Default.AccountCircle
+                    "Contacto" to Icons.Default.Email
                 )
 
                 Column(modifier = Modifier.fillMaxWidth()) {
@@ -98,7 +87,11 @@ fun PantallaPrincipal() {
                             onClick = {
                                 scope.launch {
                                     drawerState.close()
-                                    snackbarHostState.showSnackbar("$label seleccionado")
+                                    when (label) {
+                                        "Inicio" -> navController.navigate("inicio")
+                                        "Productos" -> navController.navigate("productos")
+                                        "Contacto" -> navController.navigate("contacto")
+                                    }
                                 }
                             },
                             icon = { Icon(icon, contentDescription = null, tint = Color.White) },
@@ -139,9 +132,6 @@ fun PantallaPrincipal() {
     }
 }
 
-// -------------------------
-// BANNER PRINCIPAL
-// -------------------------
 @Composable
 fun BannerPrincipal() {
     Box(
@@ -170,9 +160,6 @@ fun BannerPrincipal() {
     }
 }
 
-// -------------------------
-// PRODUCTOS DESTACADOS
-// -------------------------
 @Composable
 fun ProductosDestacados() {
     val productos = listOf(
@@ -220,9 +207,6 @@ fun ProductosDestacados() {
     }
 }
 
-// -------------------------
-// CATEGORÍAS
-// -------------------------
 @Composable
 fun CategoriasSeccion() {
     val categorias = listOf(
@@ -266,9 +250,6 @@ fun CategoriasSeccion() {
     }
 }
 
-// -------------------------
-// FOOTER
-// -------------------------
 @Composable
 fun FooterSeccion() {
     Column(
