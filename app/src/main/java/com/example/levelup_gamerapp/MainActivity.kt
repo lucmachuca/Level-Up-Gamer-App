@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.levelup_gamerapp.ui.PantallaContacto
+import com.example.levelup_gamerapp.ui.AppNavHost
 import com.example.levelup_gamerapp.ui.theme.LevelUp_GamerAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LevelUp_GamerAppTheme {
-                PantallaContacto() // 👈 Carga la pantalla de contacto
+                AppNavHost() // ✅ Carga la navegación completa (con Drawer y todas las pantallas)
             }
         }
     }
