@@ -97,20 +97,11 @@ private fun AppNavGraph(
     ) {
         // 🔹 Pantallas actuales
         composable("inicio") { "PantallaPrincipal(nav)" }
-        composable("productos") { PantallaProductos(nav) }
+        composable("productos") { "PantallaProductos(nav)" }
         // 🔹 Pantalla de detalle
-        composable("producto/{id}") { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
-            if (id != null) {
-                PantallaProducto(id = id, onNavigateBack = { nav.popBackStack() })
-            } else {
-                PlaceholderScreen("Error: producto no encontrado")
-            }
-        }
-        composable("novedades") { PlaceholderScreen("Pantalla de novedades (en desarrollo)") }
-
+        composable("novedades") { "PantallaNovedades()" }
         // 🔹 Rutas futuras (placeholders)
-        composable("contacto") { PlaceholderScreen("Pantalla Contacto (en desarrollo)") }
+        composable("contacto") { "PantallaContacto()"}
         composable("login") { PlaceholderScreen("Pantalla Login (en desarrollo)") }
         composable("registro") { PlaceholderScreen("Pantalla Registro (en desarrollo)") }
     }
