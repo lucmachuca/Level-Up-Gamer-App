@@ -104,6 +104,7 @@ private fun AppNavGraph(
         composable("contacto") { "PantallaContacto()"}
         composable("login") { PlaceholderScreen("Pantalla Login (en desarrollo)") }
         composable("registro") { PlaceholderScreen("Pantalla Registro (en desarrollo)") }
+        composable("carrito") { PantallaCarrito()}
     }
 }
 
