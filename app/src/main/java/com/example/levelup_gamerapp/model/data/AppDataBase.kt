@@ -6,26 +6,24 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(entities = [RegistroUsuarioEntity::class], version = 2, exportSchema = false)
-abstract class AppDataBase : RoomDatabase() {
-
+abstract class AppDatabase : RoomDatabase() {
     abstract fun registroUsuarioDao(): RegistroUsuarioDAO
 
     companion object {
         @Volatile
-        private var INSTANCE: AppDataBase? = null
+        private var INSTANCE: AppDatabase? = null
 
-        fun getDatabase(context: Context): AppDataBase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
+        fun get(context: Context): AppDatabase =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
-                    AppDataBase::class.java,
-                    "levelup_database"
+                    AppDatabase::class.java,
+                    "levelup_gamer.db"
                 )
-                    .fallbackToDestructiveMigration() // ✅ evita crash al cambiar schema
+                    .fallbackToDestructiveMigration()
                     .build()
-                INSTANCE = instance
-                instance
+                    .also { INSTANCE = it }
             }
-        }
     }
 }
+

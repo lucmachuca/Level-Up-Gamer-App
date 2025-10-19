@@ -1,114 +1,65 @@
 package com.example.levelup_gamerapp.ui
 
+import android.app.Application
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.example.levelup_gamerapp.model.data.AppDataBase
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.levelup_gamerapp.model.data.AppDatabase
 import com.example.levelup_gamerapp.model.repository.RegistroUsuarioRepository
 import com.example.levelup_gamerapp.viewmodel.RegistroUsuarioViewModel
 import com.example.levelup_gamerapp.viewmodel.RegistroUsuarioViewModelFactory
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistroUsuarioScreen() {
-    // Inicialización MVVM
-    val context = LocalContext.current
-    val dao = AppDataBase.getDatabase(context).registroUsuarioDao()
-    val repository = RegistroUsuarioRepository(dao)
-    val vm: RegistroUsuarioViewModel = viewModel(
-        factory = RegistroUsuarioViewModelFactory(repository)
-    )
+fun RegistroUsuarioScreen(
+    navController: NavController? = null
+) {
+    val app = LocalContext.current.applicationContext as Application
+    val dao = AppDatabase.get(app).registroUsuarioDao()
+    val repo = RegistroUsuarioRepository(dao)
+    val vm: RegistroUsuarioViewModel = viewModel(factory = RegistroUsuarioViewModelFactory(repo))
 
-    // Estados de los campos
-    var nombre by remember { mutableStateOf("") }
-    var apellido by remember { mutableStateOf("") }
-    var correo by remember { mutableStateOf("") }
-    var contrasena by remember { mutableStateOf("") }
-    var edad by remember { mutableStateOf("") }
-
-    val mensaje by vm.mensaje.collectAsState()
-
-    // Interfaz principal
-    Surface(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Text(
-                "Registro de Usuario",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.secondary
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Level Up") },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Black
+                )
             )
-            Spacer(Modifier.height(16.dp))
-
-            // Campos básicos (más compactos)
-            CampoTexto("Nombre", nombre) { nombre = it }
-            CampoTexto("Apellido", apellido) { apellido = it }
-            CampoTexto("Correo", correo) { correo = it }
-            CampoTexto(
-                "Contraseña",
-                contrasena,
-                esPassword = true
-            ) { contrasena = it }
-            CampoTexto("Edad", edad) { edad = it }
-
-            Spacer(Modifier.height(24.dp))
-
-            Button(
-                onClick = {
-                    val edadInt = edad.toIntOrNull() ?: 0
-                    vm.registrar(nombre, apellido, correo, contrasena, edadInt)
-                },
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+        },
+        containerColor = Color.Black
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(Color.Black),
+            contentAlignment = Alignment.Center
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                color = MaterialTheme.colorScheme.background
             ) {
-                Text("Registrarse")
-            }
-
-            if (mensaje.isNotEmpty()) {
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    text = mensaje,
-                    color = when {
-                        mensaje.contains("descuento", ignoreCase = true) ||
-                                mensaje.contains("%", ignoreCase = true) -> // detecta descuento con o sin emoji
-                            MaterialTheme.colorScheme.secondary
-                        mensaje.startsWith("Registro exitoso") ->
-                            MaterialTheme.colorScheme.primary
-                        else ->
-                            MaterialTheme.colorScheme.error
-                    },
-                    style = MaterialTheme.typography.bodyLarge
+                FormScreen(
+                    vm = vm,
+                    onSaved = {
+                        navController?.navigate("login") {
+                            popUpTo("registro_usuario") { inclusive = true }
+                        }
+                    }
                 )
             }
-
         }
     }
-}
-
-// 🔹 Composable auxiliar para simplificar campos
-@Composable
-fun CampoTexto(
-    etiqueta: String,
-    valor: String,
-    esPassword: Boolean = false,
-    onValorCambio: (String) -> Unit
-) {
-    OutlinedTextField(
-        value = valor,
-        onValueChange = onValorCambio,
-        label = { Text(etiqueta) },
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-        visualTransformation = if (esPassword) PasswordVisualTransformation() else VisualTransformation.None
-    )
 }
