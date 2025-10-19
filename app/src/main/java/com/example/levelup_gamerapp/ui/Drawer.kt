@@ -1,5 +1,4 @@
 //Drawer.kt//
-
 package com.example.levelup_gamerapp.ui
 
 import androidx.compose.foundation.layout.*
@@ -36,13 +35,20 @@ fun DrawerContent(
             style = MaterialTheme.typography.titleLarge
         )
 
+        // 🟢 Bloque principal
         DrawerItem("Inicio", "inicio", Color(0xFF1E90FF), onNavigate)
         DrawerItem("Productos", "productos", Color(0xFF39FF14), onNavigate)
         DrawerItem("Novedades", "novedades", Color(0xFF1E90FF), onNavigate)
-
-        // 🔹 NUEVAS PANTALLAS A FUTURO
         DrawerItem("Contacto", "contacto", Color(0xFFFFA500), onNavigate)
-        DrawerItem("Login", "login", Color(0xFF00CED1), onNavigate)
+        DrawerItem("Carrito", "carrito", Color(0xFFFFA500), onNavigate)
+
+        // 🔻 Separador visual
+        Spacer(modifier = Modifier.height(32.dp))
+        Divider(color = Color(0xFF222222), thickness = 1.dp)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 🔹 Bloque inferior (Login / Registro)
+        DrawerItem("Login", "login", Color(0xFF1E90FF), onNavigate)
         DrawerItem("Registro", "registro", Color(0xFFE91E63), onNavigate)
     }
 }
