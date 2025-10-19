@@ -96,13 +96,12 @@ private fun AppNavGraph(
             .background(Color.Black)
     ) {
         // 🔹 Pantallas actuales
-        composable("inicio") { PantallaPrincipal(nav) }
-        composable("productos") { PlaceholderScreen("Pantalla de producto no indexada") }
-        composable("novedades") { PlaceholderScreen("Pantalla de novedades (en desarrollo)") }
-
+        composable("inicio") { "PantallaPrincipal(nav)" }
+        composable("productos") { "PantallaProductos(nav)" }
+        // 🔹 Pantalla de detalle
+        composable("novedades") { PantallaNovedades() }
         // 🔹 Rutas futuras (placeholders)
         composable("contacto") { PlaceholderScreen("Pantalla Contacto (en desarrollo)") }
-        composable("carrito") { PlaceholderScreen("Pantalla Carrito(en desarrollo)") }
         composable("login") { PlaceholderScreen("Pantalla Login (en desarrollo)") }
         composable("registro") { PlaceholderScreen("Pantalla Registro (en desarrollo)") }
     }
