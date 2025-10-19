@@ -31,7 +31,6 @@ fun PantallaContacto() {
     var correoError by remember { mutableStateOf(false) }
     var mensajeError by remember { mutableStateOf(false) }
 
-    // Estado para animar el botón
     var presionado by remember { mutableStateOf(false) }
     val escala by animateFloatAsState(if (presionado) 0.9f else 1f, label = "")
 
@@ -47,6 +46,7 @@ fun PantallaContacto() {
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Color.Black
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -63,6 +63,22 @@ fun PantallaContacto() {
             )
             Spacer(modifier = Modifier.height(20.dp))
 
+            // ✅ Colores compatibles con Compose Material 3 actual
+            val textFieldColors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                errorTextColor = Color.Red,
+                focusedContainerColor = Color.Black,
+                unfocusedContainerColor = Color.Black,
+                cursorColor = Color(0xFF39FF14),
+                focusedBorderColor = Color(0xFF39FF14),
+                unfocusedBorderColor = Color(0xFF1E90FF),
+                errorBorderColor = Color.Red,
+                focusedLabelColor = Color(0xFF39FF14),
+                unfocusedLabelColor = Color(0xFF1E90FF),
+                errorLabelColor = Color.Red
+            )
+
             // Campo Nombre
             OutlinedTextField(
                 value = nombre,
@@ -73,7 +89,8 @@ fun PantallaContacto() {
                 label = { Text("Nombre") },
                 isError = nombreError,
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
 
             // Campo Correo
@@ -81,13 +98,14 @@ fun PantallaContacto() {
                 value = correo,
                 onValueChange = {
                     correo = it
-                    correoError = !it.contains("@")
+                    correoError = !correo.contains("@")
                 },
                 label = { Text("Correo electrónico") },
                 isError = correoError,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
 
             // Campo Asunto
@@ -96,7 +114,8 @@ fun PantallaContacto() {
                 onValueChange = { asunto = it },
                 label = { Text("Asunto (opcional)") },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
 
             // Campo Mensaje
@@ -110,12 +129,13 @@ fun PantallaContacto() {
                 isError = mensajeError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
+                    .height(120.dp),
+                colors = textFieldColors
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🔹 Botón con animación al presionar
+            // Botón
             Button(
                 onClick = {
                     presionado = true
@@ -137,7 +157,6 @@ fun PantallaContacto() {
                         }
                     }
 
-                    // Restaurar animación tras un breve delay
                     scope.launch {
                         kotlinx.coroutines.delay(150)
                         presionado = false
