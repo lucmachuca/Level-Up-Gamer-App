@@ -102,6 +102,7 @@ private fun AppNavGraph(
 
         // 🔹 Rutas futuras (placeholders)
         composable("contacto") { PlaceholderScreen("Pantalla Contacto (en desarrollo)") }
+        composable("carrito") { PlaceholderScreen("Pantalla Carrito(en desarrollo)") }
         composable("login") { PlaceholderScreen("Pantalla Login (en desarrollo)") }
         composable("registro") { PlaceholderScreen("Pantalla Registro (en desarrollo)") }
     }
