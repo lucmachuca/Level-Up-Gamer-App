@@ -21,6 +21,9 @@ import com.example.levelup_gamerapp.local.CarritoEntity
 import com.example.levelup_gamerapp.repository.CarritoRepository
 import com.example.levelup_gamerapp.viewmodel.CarritoViewModel
 import com.example.levelup_gamerapp.viewmodel.CarritoViewModelFactory
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
