@@ -7,10 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import kotlinx.coroutines.launch
 
 data class Producto(
     val nombre: String,
@@ -34,101 +31,17 @@ data class Categoria(
     val iconUrl: String
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaPrincipal(navController: NavHostController) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(
-                drawerContainerColor = Color.Black,
-                drawerContentColor = Color.White,
-                modifier = Modifier.width(300.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { scope.launch { drawerState.close() } }) {
-                        Icon(Icons.Default.Close, contentDescription = "Cerrar menú", tint = Color(0xFF39FF14))
-                    }
-                }
-
-                Text(
-                    text = "LEVEL-UP GAMER",
-                    color = Color(0xFF39FF14),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                val drawerItems = listOf(
-                    "Inicio" to Icons.Default.Home,
-                    "Productos" to Icons.Default.ShoppingCart,
-                    "Contacto" to Icons.Default.Email
-                )
-
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    drawerItems.forEach { (label, icon) ->
-                        NavigationDrawerItem(
-                            label = { Text(label, color = Color.White) },
-                            selected = false,
-                            onClick = {
-                                scope.launch {
-                                    drawerState.close()
-                                    when (label) {
-                                        "Inicio" -> navController.navigate("inicio")
-                                        "Productos" -> navController.navigate("productos")
-                                        "Contacto" -> navController.navigate("contacto")
-                                    }
-                                }
-                            },
-                            icon = { Icon(icon, contentDescription = null, tint = Color.White) },
-                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                        )
-                    }
-                }
-            }
-        }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
     ) {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menú", tint = Color(0xFF39FF14))
-                        }
-                    },
-                    title = { Text("LEVEL-UP GAMER", color = Color(0xFF39FF14), fontWeight = FontWeight.Bold) },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Black)
-                )
-            },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            containerColor = Color.Black
-        ) { innerPadding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .background(Color.Black)
-            ) {
-                item { BannerPrincipal() }
-                item { ProductosDestacados() }
-                item { CategoriasSeccion() }
-                item { FooterSeccion() }
-            }
-        }
+        item { BannerPrincipal() }
+        item { ProductosDestacados() }
+        item { CategoriasSeccion() }
+        item { FooterSeccion() }
     }
 }
 
