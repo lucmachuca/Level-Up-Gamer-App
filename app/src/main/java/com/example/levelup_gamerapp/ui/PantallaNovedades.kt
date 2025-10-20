@@ -32,21 +32,21 @@ fun PantallaNovedades(navBack: () -> Unit = {}) {
         listOf(
             Noticia(
                 id = 1,
-                titulo = "Nueva consola XYZ ya disponible",
-                resumen = "La consola XYZ llega con rendimiento de última generación, diseño compacto y soporte para 8K.",
-                imagenUrl = "https://via.placeholder.com/600x300.png?text=Consola+XYZ"
+                titulo = "Nuevas tarjetas graficas en camino",
+                resumen = "Contaremos con nuevas graficas RTX 5090 a la venta",
+                imagenUrl = "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRacRECxeOSUQiTMaoiCvkKw5XO24uU26XdI1IorlgYRizLWPOGegtuZ3orrru3VOMNzx6jP81Dc2r5P4iuUOsn6RFpqKzmmG4LdKpJks72jcN-L_mpggrk2w"
             ),
             Noticia(
                 id = 2,
-                titulo = "Tendencias de accesorios gamer 2025",
-                resumen = "Descubre los accesorios más demandados este año: teclados compactos, sillas ergonómicas y auriculares inalámbricos.",
-                imagenUrl = "https://via.placeholder.com/600x300.png?text=Accesorios+Gamer"
+                titulo = "Sorteos y descuenteos",
+                resumen = "Ofreceremos sorteos y descuentos en los proximos dias atentos.",
+                imagenUrl = "https://pbs.twimg.com/media/EX7okSMWoAAZv0R?format=jpg&name=large"
             ),
             Noticia(
                 id = 3,
-                titulo = "Ofertas imperdibles en Semana Gaming",
-                resumen = "Aprovecha descuentos de hasta 50% en componentes y periféricos seleccionados.",
-                imagenUrl = "https://via.placeholder.com/600x300.png?text=Ofertas+Semana+Gaming"
+                titulo = "Mantenimiento en la pagina",
+                resumen = "Estaremos haciendo matenmiento en la pagina el dia 28 a las 04:00.",
+                imagenUrl = "https://destakamarketing.com/wp-content/uploads/2024/09/mantenimiento-web-1024x597.webp"
             )
         )
     }
