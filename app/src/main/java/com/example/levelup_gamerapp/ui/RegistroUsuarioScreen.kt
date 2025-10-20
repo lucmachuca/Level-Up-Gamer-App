@@ -12,8 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.levelup_gamerapp.model.data.AppDatabase
-import com.example.levelup_gamerapp.model.repository.RegistroUsuarioRepository
+import com.example.levelup_gamerapp.local.AppDatabase
+import com.example.levelup_gamerapp.repository.RegistroUsuarioRepository
 import com.example.levelup_gamerapp.viewmodel.RegistroUsuarioViewModel
 import com.example.levelup_gamerapp.viewmodel.RegistroUsuarioViewModelFactory
 
@@ -23,7 +23,7 @@ fun RegistroUsuarioScreen(
     navController: NavController? = null
 ) {
     val app = LocalContext.current.applicationContext as Application
-    val dao = AppDatabase.get(app).registroUsuarioDao()
+    val dao = AppDatabase.obtenerBaseDatos(app).registroUsuarioDao() // ✅ cambio aquí
     val repo = RegistroUsuarioRepository(dao)
     val vm: RegistroUsuarioViewModel = viewModel(factory = RegistroUsuarioViewModelFactory(repo))
 

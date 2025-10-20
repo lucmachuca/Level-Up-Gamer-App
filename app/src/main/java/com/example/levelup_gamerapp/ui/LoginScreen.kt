@@ -10,12 +10,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.levelup_gamerapp.model.data.AppDataBase
+import com.example.levelup_gamerapp.local.AppDatabase
 import com.example.levelup_gamerapp.repository.LoginRepository
 import com.example.levelup_gamerapp.viewmodel.LoginViewModel
 import com.example.levelup_gamerapp.viewmodel.LoginViewModelFactory
-
-// 🎮 Pantalla de Inicio de Sesión
 
 @Composable
 fun LoginScreen(
@@ -23,13 +21,12 @@ fun LoginScreen(
     onNavigateRegistro: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val dao = AppDataBase.getDatabase(context).registroUsuarioDao()
+    val dao = AppDatabase.obtenerBaseDatos(context).registroUsuarioDao()
     val repository = LoginRepository(dao)
     val vm: LoginViewModel = viewModel(factory = LoginViewModelFactory(repository))
 
     var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
-
     val mensaje by vm.mensaje.collectAsState()
 
     Surface(
@@ -58,7 +55,9 @@ fun LoginScreen(
 
             Button(
                 onClick = { vm.iniciarSesion(correo, contrasena) },
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
                 Text("Ingresar")
             }
@@ -88,7 +87,7 @@ fun LoginScreen(
     }
 }
 
-// 🔹 Campo de texto reutilizable (igual al de registro)
+// 🔹 Campo de texto reutilizable (usado también por FormScreen)
 @Composable
 fun CampoTexto(
     etiqueta: String,

@@ -2,7 +2,7 @@ package com.example.levelup_gamerapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.levelup_gamerapp.model.repository.RegistroUsuarioRepository
+import com.example.levelup_gamerapp.repository.RegistroUsuarioRepository
 
 
 class RegistroUsuarioViewModelFactory(private val repository: RegistroUsuarioRepository) :

@@ -5,8 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.navigation.compose.rememberNavController
-import com.example.levelup_gamerapp.ui.LevelUpNavHost
+import com.example.levelup_gamerapp.ui.AppNavHost  // ✅ IMPORTA AppNavHost
 import com.example.levelup_gamerapp.ui.theme.LevelUpGamerAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,8 +14,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LevelUpGamerAppTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    val navController = rememberNavController()
-                    LevelUpNavHost(navController = navController)
+                    AppNavHost() // ✅ Cambia aquí
                 }
             }
         }

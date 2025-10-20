@@ -1,7 +1,7 @@
-package com.example.levelup_gamerapp.model.repository
+package com.example.levelup_gamerapp.repository
 
-import com.example.levelup_gamerapp.model.data.RegistroUsuarioDAO
-import com.example.levelup_gamerapp.model.data.RegistroUsuarioEntity
+import com.example.levelup_gamerapp.local.RegistroUsuarioDAO
+import com.example.levelup_gamerapp.local.RegistroUsuarioEntity
 
 class RegistroUsuarioRepository(private val dao: RegistroUsuarioDAO) {
 

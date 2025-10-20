@@ -70,6 +70,8 @@ dependencies {
     // ✅ Navegación y arquitectura
     implementation("androidx.navigation:navigation-compose:2.8.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+    implementation("androidx.compose.material:material-icons-extended:1.7.4")
+
 
     // ✅ Corrutinas
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")

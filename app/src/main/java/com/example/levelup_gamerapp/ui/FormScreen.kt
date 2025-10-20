@@ -23,11 +23,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.levelup_gamerapp.viewmodel.RegistroUsuarioViewModel
+
+// ✅ Reutiliza el CampoTexto del LoginScreen
+import com.example.levelup_gamerapp.ui.CampoTexto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,25 +36,21 @@ fun FormScreen(
     vm: RegistroUsuarioViewModel,
     onSaved: () -> Unit = {}
 ) {
-    // Estados de los campos
     var nombre by remember { mutableStateOf("") }
     var apellido by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
     var edad by remember { mutableStateOf("") }
 
-    // Estado de la foto
     var foto by remember { mutableStateOf<Bitmap?>(null) }
 
     val mensaje by vm.mensaje.collectAsState()
     val context = LocalContext.current
 
-    // ---- Lanzadores de cámara y galería ----
+    // ---- Cámara y galería ----
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
-    ) { bitmap ->
-        bitmap?.let { foto = it }
-    }
+    ) { bitmap -> bitmap?.let { foto = it } }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -64,13 +61,10 @@ fun FormScreen(
         }
     }
 
-    // Permisos
     val requestGalleryPermission = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) {
-            galleryLauncher.launch("image/*")
-        }
+        if (granted) galleryLauncher.launch("image/*")
     }
 
     fun abrirGaleriaConPermiso() {
@@ -81,16 +75,12 @@ fun FormScreen(
                 Manifest.permission.READ_EXTERNAL_STORAGE
 
         when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(context, permiso) -> {
-                galleryLauncher.launch("image/*")
-            }
-            else -> {
-                requestGalleryPermission.launch(permiso)
-            }
+            ContextCompat.checkSelfPermission(context, permiso) -> galleryLauncher.launch("image/*")
+            else -> requestGalleryPermission.launch(permiso)
         }
     }
 
-    // -----------------------------------------
+    // ---- UI ----
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -109,7 +99,6 @@ fun FormScreen(
             )
             Spacer(Modifier.height(16.dp))
 
-            // 🖼️ Cuadro de imagen
             Box(
                 modifier = Modifier
                     .size(160.dp)
@@ -125,17 +114,12 @@ fun FormScreen(
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
-                    Text(
-                        text = "Sin foto",
-                        color = Color.Gray,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+                    Text("Sin foto", color = Color.Gray)
                 }
             }
 
             Spacer(Modifier.height(10.dp))
 
-            // 📷 Botones de cámara y galería
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -143,21 +127,17 @@ fun FormScreen(
                 Button(
                     onClick = { cameraLauncher.launch() },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    Text("Tomar foto", color = Color.Black)
-                }
+                ) { Text("Tomar foto", color = Color.Black) }
 
                 Button(
                     onClick = { abrirGaleriaConPermiso() },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) {
-                    Text("Subir desde galería", color = Color.Black)
-                }
+                ) { Text("Subir desde galería", color = Color.Black) }
             }
 
             Spacer(Modifier.height(20.dp))
 
-            // Campos de texto
+            // Campos
             CampoTexto("Nombre", nombre) { nombre = it }
             CampoTexto("Apellido", apellido) { apellido = it }
             CampoTexto("Correo", correo) { correo = it }
@@ -166,20 +146,16 @@ fun FormScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            // Botón de registro
             Button(
                 onClick = {
                     val edadInt = edad.toIntOrNull() ?: 0
-                    vm.registrar(nombre, apellido, correo, contrasena, edadInt, foto) // 🆕 pasa la foto aquí
+                    vm.registrar(nombre, apellido, correo, contrasena, edadInt, foto)
                     onSaved()
                 },
-
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-            ) {
-                Text("Registrarse")
-            }
+            ) { Text("Registrarse") }
 
             if (mensaje.isNotEmpty()) {
                 Spacer(Modifier.height(12.dp))
@@ -194,23 +170,4 @@ fun FormScreen(
             }
         }
     }
-}
-
-// Reutilizable para todos los campos de texto
-@Composable
-fun CampoTexto(
-    etiqueta: String,
-    valor: String,
-    esPassword: Boolean = false,
-    onValorCambio: (String) -> Unit
-) {
-    OutlinedTextField(
-        value = valor,
-        onValueChange = onValorCambio,
-        label = { Text(etiqueta) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        visualTransformation = if (esPassword) PasswordVisualTransformation() else VisualTransformation.None
-    )
 }

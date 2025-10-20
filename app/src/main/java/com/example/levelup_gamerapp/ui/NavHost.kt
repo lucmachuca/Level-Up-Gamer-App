@@ -3,7 +3,7 @@ package com.example.levelup_gamerapp.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*  // ejemplo: ShoppingCart, Home, etc.
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -16,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.levelup_gamerapp.local.RegistroUsuarioDAO
 import com.example.levelup_gamerapp.ui.DrawerContent
 import kotlinx.coroutines.launch
 
@@ -112,8 +113,8 @@ private fun AppNavGraph(
         // 🔹 Rutas futuras (placeholders)
         composable("contacto") { PantallaContacto() }
         composable("login") { LoginScreen () }
-        composable("registro") { PlaceholderScreen("Pantalla Registro (en desarrollo)") }
-        composable("carrito") { PlaceholderScreen("Pantalla carrito(en desarrollo)") }
+        composable("registro") { RegistroUsuarioScreen () }
+        composable("carrito") { PantallaCarrito() }
     }
 }
 

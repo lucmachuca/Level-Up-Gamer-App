@@ -3,8 +3,8 @@ package com.example.levelup_gamerapp.viewmodel
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.levelup_gamerapp.model.data.RegistroUsuarioEntity
-import com.example.levelup_gamerapp.model.repository.RegistroUsuarioRepository
+import com.example.levelup_gamerapp.local.RegistroUsuarioEntity
+import com.example.levelup_gamerapp.repository.RegistroUsuarioRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
