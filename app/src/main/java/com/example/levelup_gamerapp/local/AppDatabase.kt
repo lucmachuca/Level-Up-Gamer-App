@@ -5,10 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [ProductosEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        ProductosEntity::class,
+        CarritoEntity::class
+    ],
+    version = 2, // 🔹 aumenta la versión para forzar recreación
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun productosDao(): ProductosDao
+    abstract fun carritoDao(): CarritoDao
 
     companion object {
         @Volatile
@@ -20,7 +28,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "levelup_db"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration() // 🔹 reconstruye si cambió el esquema
+                    .build()
                 INSTANCE = instance
                 instance
             }
