@@ -96,7 +96,7 @@ private fun AppNavGraph(
             .background(Color.Black)
     ) {
         // 🔹 Pantallas actuales
-        composable("inicio") { "PantallaPrincipal(nav)" }
+        composable("inicio") { PantallaPrincipal(nav) }
         composable("productos") { PantallaProductos(nav) }
         // 🔹 Pantalla de detalle
         composable("producto/{id}") { backStackEntry ->
@@ -107,12 +107,13 @@ private fun AppNavGraph(
                 PlaceholderScreen("Error: producto no encontrado")
             }
         }
-        composable("novedades") { PlaceholderScreen("Pantalla de novedades (en desarrollo)") }
+        composable("novedades") { PantallaNovedades() }
 
         // 🔹 Rutas futuras (placeholders)
-        composable("contacto") { PlaceholderScreen("Pantalla Contacto (en desarrollo)") }
-        composable("login") { PlaceholderScreen("Pantalla Login (en desarrollo)") }
+        composable("contacto") { PantallaContacto() }
+        composable("login") { LoginScreen () }
         composable("registro") { PlaceholderScreen("Pantalla Registro (en desarrollo)") }
+        composable("carrito") { PlaceholderScreen("Pantalla carrito(en desarrollo)") }
     }
 }
 

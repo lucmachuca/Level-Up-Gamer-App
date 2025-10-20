@@ -3,22 +3,17 @@ package com.example.levelup_gamerapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.navigation.compose.rememberNavController
-import com.example.levelup_gamerapp.ui.LevelUpNavHost
-import com.example.levelup_gamerapp.ui.theme.LevelUpGamerAppTheme
+import androidx.activity.enableEdgeToEdge
+import com.example.levelup_gamerapp.ui.AppNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
-            // 🎨 Aplica el tema visual gamer
-            LevelUpGamerAppTheme {
-                // 🧭 Crea un controlador de navegación
-                val navController = rememberNavController()
-
-                // 🔹 Carga el host de navegación
-                LevelUpNavHost(navController = navController)
+                AppNavHost() // ✅ Carga la navegación completa (con Drawer y todas las pantallas)
             }
         }
     }
-}
+
+
