@@ -6,12 +6,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.levelup_gamerapp.model.data.AppDataBase
 import com.example.levelup_gamerapp.model.repository.LoginRepository
 import com.example.levelup_gamerapp.viewmodel.LoginViewModel
 import com.example.levelup_gamerapp.viewmodel.LoginViewModelFactory
+
+// 🎮 Pantalla de Inicio de Sesión
 
 @Composable
 fun LoginScreen(
@@ -29,7 +33,9 @@ fun LoginScreen(
     val mensaje by vm.mensaje.collectAsState()
 
     Surface(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -82,3 +88,21 @@ fun LoginScreen(
     }
 }
 
+// 🔹 Campo de texto reutilizable (igual al de registro)
+@Composable
+fun CampoTexto(
+    etiqueta: String,
+    valor: String,
+    esPassword: Boolean = false,
+    onValorCambio: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = valor,
+        onValueChange = onValorCambio,
+        label = { Text(etiqueta) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        visualTransformation = if (esPassword) PasswordVisualTransformation() else VisualTransformation.None
+    )
+}

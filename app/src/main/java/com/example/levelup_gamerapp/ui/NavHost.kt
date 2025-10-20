@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
+// 🧭 Controla la navegación entre pantallas Compose
 @Composable
 fun LevelUpNavHost(
     navController: NavHostController,
@@ -16,17 +17,20 @@ fun LevelUpNavHost(
         startDestination = "login",
         modifier = modifier
     ) {
+        // Pantalla de inicio de sesión
         composable("login") {
             LoginScreen(
                 onLoginSuccess = {
-                    // Navegarás a "noticias" más adelante
+                    // Aquí puedes ir a la pantalla de noticias después del merge
+                    // navController.navigate("noticias")
                 },
                 onNavigateRegistro = {
                     navController.navigate("registro_usuario")
                 }
             )
         }
-        // Esta ruta se activará cuando hagas merge con registro
+
+        // Pantalla de registro (existirá tras el merge)
         composable("registro_usuario") {
             RegistroUsuarioScreen()
         }

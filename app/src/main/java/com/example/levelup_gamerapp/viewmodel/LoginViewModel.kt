@@ -7,12 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-// 🧩 ViewModel que maneja la lógica de inicio de sesión
+// 🧠 ViewModel del Login
+// Maneja la lógica de validación y los mensajes que se muestran en pantalla.
 class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
 
-    private val _mensaje = MutableStateFlow("")
+    private val _mensaje = MutableStateFlow("") // Estado del mensaje
     val mensaje: StateFlow<String> = _mensaje
 
+    // Inicia sesión validando el correo y la contraseña
     fun iniciarSesion(correo: String, contrasena: String) {
         viewModelScope.launch {
             if (correo.isBlank() || contrasena.isBlank()) {
@@ -34,6 +36,7 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
         }
     }
 
+    // Limpia el mensaje (por si el usuario cambia los datos)
     fun limpiarMensaje() {
         _mensaje.value = ""
     }
