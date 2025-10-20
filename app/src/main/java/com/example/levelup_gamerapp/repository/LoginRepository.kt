@@ -1,6 +1,4 @@
-package com.example.levelup_gamerapp.model.repository
-
-import com.example.levelup_gamerapp.model.data.RegistroUsuarioDAO
+package com.example.levelup_gamerapp.repository
 
 // 🧩 Repositorio del Login
 // Contiene la lógica de validación de usuario y contraseña contra la BD Room.

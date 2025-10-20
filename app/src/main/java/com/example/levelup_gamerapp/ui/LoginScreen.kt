@@ -11,7 +11,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.levelup_gamerapp.model.data.AppDataBase
-import com.example.levelup_gamerapp.model.repository.LoginRepository
+import com.example.levelup_gamerapp.repository.LoginRepository
 import com.example.levelup_gamerapp.viewmodel.LoginViewModel
 import com.example.levelup_gamerapp.viewmodel.LoginViewModelFactory
 

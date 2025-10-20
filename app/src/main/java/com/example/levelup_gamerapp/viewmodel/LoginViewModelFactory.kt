@@ -2,7 +2,7 @@ package com.example.levelup_gamerapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.levelup_gamerapp.model.repository.LoginRepository
+import com.example.levelup_gamerapp.repository.LoginRepository
 
 // 🏗️ Factory que crea instancias del LoginViewModel
 class LoginViewModelFactory(private val repository: LoginRepository) : ViewModelProvider.Factory {
