@@ -1,3 +1,4 @@
+//NavHost.kt//
 package com.example.levelup_gamerapp.ui
 
 import androidx.compose.foundation.background
@@ -96,17 +97,18 @@ private fun AppNavGraph(
             .background(Color.Black)
     ) {
         // 🔹 Pantallas actuales
-        composable("inicio") { PantallaPrincipal(nav) }
-        composable("productos") { PlaceholderScreen("Pantalla de producto no indexada") }
+        composable("inicio") { "PantallaPrincipal(nav)" }
+        composable("productos") { "PantallaProductos(nav)" }
+        // 🔹 AGREGAR Pantalla de detalle
         composable("novedades") { PlaceholderScreen("Pantalla de novedades (en desarrollo)") }
-
         // 🔹 Rutas futuras (placeholders)
-        composable("contacto") { PlaceholderScreen("Pantalla Contacto (en desarrollo)") }
-        composable("carrito") { PlaceholderScreen("Pantalla Carrito(en desarrollo)") }
+        composable("contacto") { PantallaContacto() }
         composable("login") { PlaceholderScreen("Pantalla Login (en desarrollo)") }
         composable("registro") { PlaceholderScreen("Pantalla Registro (en desarrollo)") }
     }
 }
+
+
 
 @Composable
 fun PlaceholderScreen(texto: String) {
