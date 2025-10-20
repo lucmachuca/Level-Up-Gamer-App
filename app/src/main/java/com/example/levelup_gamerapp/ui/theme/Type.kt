@@ -8,11 +8,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.levelup_gamerapp.R
 
-// 🔤 Fuentes personalizadas
+
+
 val Roboto = FontFamily(Font(R.font.roboto_regular))
 val Orbitron = FontFamily(Font(R.font.orbitron_bold))
 
-// 🧩 Estilos de texto Material3 con look gamer
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = Roboto,

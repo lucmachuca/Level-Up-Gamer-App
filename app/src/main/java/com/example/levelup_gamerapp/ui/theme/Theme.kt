@@ -4,7 +4,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
-// 🎨 Paleta de colores (modo oscuro gamer)
 private val DarkColorScheme = darkColorScheme(
     primary = AzulElectrico,
     secondary = VerdeNeon,
@@ -16,7 +15,7 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = GrisClaroTexto
 )
 
-// 🧭 Tema principal de Level-Up Gamer
+// 🧭 Tema principal
 @Composable
 fun LevelUpGamerAppTheme(
     darkTheme: Boolean = true,
