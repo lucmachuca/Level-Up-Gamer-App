@@ -4,27 +4,34 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.levelup_gamerapp.local.CarritoEntity
 import com.example.levelup_gamerapp.repository.CarritoRepository
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class CarritoViewModel(private val repo: CarritoRepository) : ViewModel() {
+class CarritoViewModel(private val repository: CarritoRepository) : ViewModel() {
 
-    val carrito = repo.carrito.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        emptyList()
-    )
+    val carrito = repository.carrito
 
-    fun agregar(item: CarritoEntity) {
-        viewModelScope.launch { repo.agregar(item) }
+    fun agregarProductoAlCarrito(nombre: String, precio: Double, imagenUrl: String) {
+        viewModelScope.launch {
+            val item = CarritoEntity(
+                nombreProducto = nombre,
+                precio = precio,
+                cantidad = 1,
+                imagenUrl = imagenUrl
+            )
+            repository.agregar(item)
+        }
     }
 
-    fun eliminar(item: CarritoEntity) {
-        viewModelScope.launch { repo.eliminar(item) }
+    fun eliminarProducto(item: CarritoEntity) {
+        viewModelScope.launch {
+            repository.eliminar(item)
+        }
     }
 
-    fun vaciar() {
-        viewModelScope.launch { repo.vaciar() }
+    fun vaciarCarrito() {
+        viewModelScope.launch {
+            repository.vaciar()
+        }
     }
 }
+

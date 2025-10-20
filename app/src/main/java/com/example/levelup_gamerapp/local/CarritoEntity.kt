@@ -12,3 +12,4 @@ data class CarritoEntity(
     val cantidad: Int,
     val imagenUrl: String
 )
+

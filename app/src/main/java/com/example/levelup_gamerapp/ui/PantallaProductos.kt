@@ -22,7 +22,10 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.levelup_gamerapp.local.AppDatabase
 import com.example.levelup_gamerapp.local.ProductosEntity
+import com.example.levelup_gamerapp.repository.CarritoRepository
 import com.example.levelup_gamerapp.repository.ProductosRepository
+import com.example.levelup_gamerapp.viewmodel.CarritoViewModel
+import com.example.levelup_gamerapp.viewmodel.CarritoViewModelFactory
 import com.example.levelup_gamerapp.viewmodel.ProductosViewModel
 import com.example.levelup_gamerapp.viewmodel.ProductosViewModelFactory
 
@@ -88,14 +91,19 @@ fun PantallaProductos(nav: NavController) {
 }
 
 /**
- * 🔹 Composable para mostrar cada tarjeta de producto.
+ * 🔹 Tarjeta de producto con botón para añadir al carrito.
  */
 @Composable
 fun ProductoCard(producto: ProductosEntity, onClick: () -> Unit) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val dao = AppDatabase.obtenerBaseDatos(context).carritoDao()
+    val repo = CarritoRepository(dao)
+    val carritoVM: CarritoViewModel = viewModel(factory = CarritoViewModelFactory(repo))
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(230.dp)
+            .height(300.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color(0xFF111111))
     ) {
@@ -103,7 +111,8 @@ fun ProductoCard(producto: ProductosEntity, onClick: () -> Unit) {
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Image(
                 painter = rememberAsyncImagePainter(producto.imagenUrl),
@@ -113,9 +122,20 @@ fun ProductoCard(producto: ProductosEntity, onClick: () -> Unit) {
                     .height(120.dp),
                 contentScale = ContentScale.Crop
             )
+
             Spacer(modifier = Modifier.height(8.dp))
             Text(producto.nombre, color = Color(0xFF39FF14), fontWeight = FontWeight.Bold, fontSize = 14.sp)
             Text("$${producto.precio}", color = Color(0xFF1E90FF), fontSize = 12.sp)
+
+            Button(
+                onClick = {
+                    carritoVM.agregarProductoAlCarrito(producto.nombre, producto.precio, producto.imagenUrl)
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39FF14))
+            ) {
+                Text("🛒 Agregar al carrito", color = Color.Black, fontWeight = FontWeight.Bold)
+            }
         }
     }
 }
+

@@ -16,4 +16,8 @@ interface ProductosDao {
 
     @Query("DELETE FROM productos")
     suspend fun eliminarTodos()
+
+    //nuevo metodo para detalle producto
+    @Query("SELECT * FROM productos WHERE id = :id LIMIT 1")
+    suspend fun obtenerProductoPorId(id: Int): ProductosEntity?
 }

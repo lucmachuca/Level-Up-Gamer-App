@@ -11,5 +11,7 @@ data class ProductosEntity(
     val descripcion: String,
     val precio: Double,
     val imagenUrl: String,
-    val categoria: String
+    val categoria: String,
+    val cantidadDisponible: Int // 🆕 nuevo campo
 )
+

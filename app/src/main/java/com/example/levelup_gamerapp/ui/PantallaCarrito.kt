@@ -21,9 +21,6 @@ import com.example.levelup_gamerapp.local.CarritoEntity
 import com.example.levelup_gamerapp.repository.CarritoRepository
 import com.example.levelup_gamerapp.viewmodel.CarritoViewModel
 import com.example.levelup_gamerapp.viewmodel.CarritoViewModelFactory
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,49 +28,90 @@ fun PantallaCarrito() {
     val context = androidx.compose.ui.platform.LocalContext.current
     val dao = AppDatabase.obtenerBaseDatos(context).carritoDao()
     val repo = CarritoRepository(dao)
-    val viewModel: CarritoViewModel = viewModel(factory = CarritoViewModelFactory(repo))
-    val carrito by viewModel.carrito.collectAsState()
+    val carritoVM: CarritoViewModel = viewModel(factory = CarritoViewModelFactory(repo))
+
+    val carrito by carritoVM.carrito.collectAsState(initial = emptyList())
+
+    val total = carrito.sumOf { it.precio * it.cantidad }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Mi Carrito", color = Color(0xFF39FF14)) },
+                title = {
+                    Text(
+                        "🛒 Carrito de Compras",
+                        color = Color(0xFF39FF14),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Black)
             )
         },
         containerColor = Color.Black
     ) { padding ->
-        if (carrito.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Tu carrito está vacío 🛒", color = Color.White)
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-                    .padding(padding)
-            ) {
-                items(carrito) { item ->
-                    CarritoItem(item = item, onEliminar = { viewModel.eliminar(item) })
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .padding(padding)
+        ) {
+            if (carrito.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Tu carrito está vacío 🛍️", color = Color.White, fontSize = 18.sp)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 12.dp)
+                ) {
+                    items(carrito) { item ->
+                        CarritoItem(
+                            item = item,
+                            onEliminar = { carritoVM.eliminarProducto(item) }
+                        )
+                    }
                 }
 
-                item {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Button(
-                        onClick = { viewModel.vaciar() },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39FF14)),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+                Divider(color = Color(0xFF39FF14), thickness = 1.dp)
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Total: $${"%.2f".format(total)}",
+                        color = Color(0xFF1E90FF),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Text("Vaciar carrito", color = Color.Black, fontWeight = FontWeight.Bold)
+                        Button(
+                            onClick = { carritoVM.vaciarCarrito() },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF3B3B))
+                        ) {
+                            Text("Vaciar", color = Color.White)
+                        }
+
+                        Button(
+                            onClick = {
+                                // Aquí podrías implementar el proceso de compra
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39FF14))
+                        ) {
+                            Text("Comprar", color = Color.Black, fontWeight = FontWeight.Bold)
+                        }
                     }
                 }
             }
@@ -81,17 +119,20 @@ fun PantallaCarrito() {
     }
 }
 
+/**
+ * 🔹 Elemento individual dentro del carrito
+ */
 @Composable
 fun CarritoItem(item: CarritoEntity, onEliminar: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(vertical = 8.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF111111))
     ) {
         Row(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(10.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -100,16 +141,23 @@ fun CarritoItem(item: CarritoEntity, onEliminar: () -> Unit) {
                 contentDescription = item.nombreProducto,
                 modifier = Modifier
                     .size(80.dp)
-                    .padding(8.dp),
+                    .padding(end = 10.dp),
                 contentScale = ContentScale.Crop
             )
-            Column(modifier = Modifier.weight(1f)) {
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(item.nombreProducto, color = Color(0xFF39FF14), fontWeight = FontWeight.Bold)
                 Text("Cantidad: ${item.cantidad}", color = Color.White)
                 Text("Precio: $${item.precio}", color = Color(0xFF1E90FF))
             }
-            IconButton(onClick = onEliminar) {
-                Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.Red)
+
+            Button(
+                onClick = onEliminar,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF3B3B))
+            ) {
+                Text("🗑️", color = Color.White)
             }
         }
     }

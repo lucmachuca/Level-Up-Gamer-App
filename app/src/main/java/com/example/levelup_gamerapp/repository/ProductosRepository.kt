@@ -3,21 +3,26 @@ package com.example.levelup_gamerapp.repository
 import com.example.levelup_gamerapp.local.ProductosDao
 import com.example.levelup_gamerapp.local.ProductosEntity
 
-class ProductosRepository(private val productosDao: ProductosDao) {
+class ProductosRepository(private val dao: ProductosDao) {
 
     suspend fun obtenerProductos(): List<ProductosEntity> {
-        return productosDao.obtenerTodos()
+        return dao.obtenerTodos()
     }
 
     suspend fun insertarProducto(producto: ProductosEntity) {
-        productosDao.insertarProducto(producto)
+        dao.insertarProducto(producto)
     }
 
     suspend fun eliminarProducto(producto: ProductosEntity) {
-        productosDao.eliminarProducto(producto)
+        dao.eliminarProducto(producto)
     }
 
     suspend fun eliminarTodos() {
-        productosDao.eliminarTodos()
+        dao.eliminarTodos()
+    }
+
+ //metodo para productos por id
+    suspend fun obtenerProductoPorId(id: Int): ProductosEntity? {
+        return dao.obtenerProductoPorId(id)
     }
 }

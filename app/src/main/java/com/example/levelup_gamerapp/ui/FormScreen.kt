@@ -14,7 +14,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,10 +26,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.core.content.ContextCompat
 import com.example.levelup_gamerapp.viewmodel.RegistroUsuarioViewModel
-
-// ✅ Reutiliza el CampoTexto del LoginScreen
 import com.example.levelup_gamerapp.ui.CampoTexto
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +47,8 @@ fun FormScreen(
 
     val mensaje by vm.mensaje.collectAsState()
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
 
     // ---- Cámara y galería ----
     val cameraLauncher = rememberLauncherForActivityResult(
@@ -84,13 +87,17 @@ fun FormScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(24.dp)
+            .imePadding(), // evita que el teclado tape campos
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(bottom = 100.dp) // espacio al final para que se vea todo
         ) {
             Text(
                 "Registro de Usuario",
@@ -150,6 +157,7 @@ fun FormScreen(
                 onClick = {
                     val edadInt = edad.toIntOrNull() ?: 0
                     vm.registrar(nombre, apellido, correo, contrasena, edadInt, foto)
+                    keyboardController?.hide()
                     onSaved()
                 },
                 modifier = Modifier

@@ -14,6 +14,7 @@ import com.example.levelup_gamerapp.local.AppDatabase
 import com.example.levelup_gamerapp.repository.LoginRepository
 import com.example.levelup_gamerapp.viewmodel.LoginViewModel
 import com.example.levelup_gamerapp.viewmodel.LoginViewModelFactory
+import com.example.levelup_gamerapp.viewmodel.SesionViewModel
 
 @Composable
 fun LoginScreen(
@@ -24,6 +25,7 @@ fun LoginScreen(
     val dao = AppDatabase.obtenerBaseDatos(context).registroUsuarioDao()
     val repository = LoginRepository(dao)
     val vm: LoginViewModel = viewModel(factory = LoginViewModelFactory(repository))
+    val sesionViewModel: SesionViewModel = viewModel() // ✅ ViewModel de sesión
 
     var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
@@ -54,7 +56,13 @@ fun LoginScreen(
             Spacer(Modifier.height(24.dp))
 
             Button(
-                onClick = { vm.iniciarSesion(correo, contrasena) },
+                onClick = {
+                    vm.iniciarSesion(correo, contrasena)
+                    if (mensaje.contains("exitoso", ignoreCase = true)) {
+                        sesionViewModel.login() // ✅ marca sesión iniciada
+                        onLoginSuccess()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -78,16 +86,12 @@ fun LoginScreen(
                     },
                     style = MaterialTheme.typography.bodyLarge
                 )
-
-                if (mensaje.contains("exitoso", ignoreCase = true)) {
-                    onLoginSuccess()
-                }
             }
         }
     }
 }
 
-// 🔹 Campo de texto reutilizable (usado también por FormScreen)
+// 🔹 Campo de texto reutilizable
 @Composable
 fun CampoTexto(
     etiqueta: String,

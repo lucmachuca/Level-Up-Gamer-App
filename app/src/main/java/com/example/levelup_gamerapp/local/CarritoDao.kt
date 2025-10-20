@@ -18,3 +18,4 @@ interface CarritoDao {
     @Query("DELETE FROM carrito")
     suspend fun vaciarCarrito()
 }
+

@@ -40,7 +40,6 @@ fun PantallaPrincipal(navController: NavHostController) {
     ) {
         item { BannerPrincipal() }
         item { ProductosDestacados() }
-        item { CategoriasSeccion() }
         item { FooterSeccion() }
     }
 }
@@ -77,9 +76,9 @@ fun BannerPrincipal() {
 fun ProductosDestacados() {
     val productos = listOf(
         Producto("Teclado Mecánico RGB", "$89.990", "https://media.falabella.com/falabellaCL/17143546_2/w=1500,h=1500,fit=pad"),
-        Producto("Audífonos Gamer HyperX", "$79.990", "https://www.powerplanetonline.com/cdnassets/hyperx_cloud_stinger_core_wireless_7.1_ps4_02_l.jpg"),
-        Producto("Mouse Logitech G Pro", "$59.990", "https://i.blogs.es/77d3cc/logitechgpro/1366_2000.jpg"),
-        Producto("Silla Gamer Razer", "$189.990", "https://cdn.mos.cms.futurecdn.net/epdKe7LXYbD7nAJ9KUQ6t8.jpg")
+        Producto("Auriculares Corsair Void", "$79.990", "https://www.powerplanetonline.com/cdnassets/hyperx_cloud_stinger_core_wireless_7.1_ps4_02_l.jpg"),
+        Producto("Mouse Logitech G Pro", "$59.990", "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTzCJ7K0bbX53NcXnCve6gnFDW-lu97zSUB5O4xVUfPShWtOu-tFepgEaKuJ_g4LAsr8zSPpkTkj92Dxgi6rvPoO9czMhZvJS_h_68PztkbkCQPXaW-02sO"),
+        Producto("Silla Gamer Razer Iskur", "$189.990", "https://media.falabella.com/falabellaCL/140930116_01/w=1500,h=1500,fit=pad")
     )
 
     Text("Destacados", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White, modifier = Modifier.padding(16.dp))
@@ -120,48 +119,6 @@ fun ProductosDestacados() {
     }
 }
 
-@Composable
-fun CategoriasSeccion() {
-    val categorias = listOf(
-        Categoria("Consolas", "https://img.icons8.com/?size=100&id=Rz3NTZkvlexz&format=png&color=39ff14"),
-        Categoria("Accesorios", "https://img.icons8.com/?size=100&id=MlGniXnp6gP1&format=png&color=39ff14"),
-        Categoria("Juegos", "https://img.icons8.com/?size=100&id=Tb5XGbRvSX2v&format=png&color=39ff14"),
-        Categoria("Componentes", "https://img.icons8.com/?size=100&id=cnYTrlcPnC0e&format=png&color=39ff14")
-    )
-
-    Text("Explora por Categorías", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF1E90FF), modifier = Modifier.padding(16.dp))
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(400.dp)
-            .padding(horizontal = 8.dp),
-        contentPadding = PaddingValues(8.dp)
-    ) {
-        items(categorias) { categoria ->
-            Card(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF000000))
-            ) {
-                Column(
-                    modifier = Modifier.padding(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(categoria.iconUrl),
-                        contentDescription = categoria.nombre,
-                        modifier = Modifier.size(70.dp)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(categoria.nombre, color = Color(0xFF39FF14), fontWeight = FontWeight.Bold)
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun FooterSeccion() {

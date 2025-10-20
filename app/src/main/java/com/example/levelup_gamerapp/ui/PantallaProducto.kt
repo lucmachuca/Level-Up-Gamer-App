@@ -3,8 +3,6 @@ package com.example.levelup_gamerapp.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,41 +10,54 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.example.levelup_gamerapp.local.AppDatabase
-import com.example.levelup_gamerapp.local.ProductosEntity
+import com.example.levelup_gamerapp.local.CarritoEntity
+import com.example.levelup_gamerapp.repository.CarritoRepository
 import com.example.levelup_gamerapp.repository.ProductosRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.example.levelup_gamerapp.viewmodel.CarritoViewModel
+import com.example.levelup_gamerapp.viewmodel.CarritoViewModelFactory
+import com.example.levelup_gamerapp.viewmodel.ProductosViewModel
+import com.example.levelup_gamerapp.viewmodel.ProductosViewModelFactory
+import androidx.compose.material.icons.filled.ArrowBack
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaProducto(id: Int, onNavigateBack: () -> Unit) {
+fun PantallaProducto(
+    id: Int,
+    onNavigateBack: () -> Unit
+) {
     val context = androidx.compose.ui.platform.LocalContext.current
-    val dao = AppDatabase.obtenerBaseDatos(context).productosDao()
-    val repo = ProductosRepository(dao)
+    val db = AppDatabase.obtenerBaseDatos(context)
 
-    var producto by remember { mutableStateOf<ProductosEntity?>(null) }
+    // 🔹 ViewModel de producto
+    val productosDao = db.productosDao()
+    val productosRepo = ProductosRepository(productosDao)
+    val productosVM: ProductosViewModel = viewModel(factory = ProductosViewModelFactory(productosRepo))
+    val producto = productosVM.obtenerProductoPorId(id).collectAsState(initial = null).value
 
-    // Carga segura del producto
-    LaunchedEffect(id) {
-        withContext(Dispatchers.IO) {
-            producto = repo.obtenerProductos().find { it.id == id }
-        }
-    }
+    // 🔹 ViewModel de carrito
+    val carritoDao = db.carritoDao()
+    val carritoRepo = CarritoRepository(carritoDao)
+    val carritoVM: CarritoViewModel = viewModel(factory = CarritoViewModelFactory(carritoRepo))
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detalle del producto", color = Color(0xFF39FF14)) },
+                title = {
+                    Text(
+                        text = "Detalle del Producto",
+                        color = Color(0xFF39FF14)
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = androidx.compose.material.icons.Icons.Default.ArrowBack,
                             contentDescription = "Volver",
                             tint = Color(0xFF39FF14)
                         )
@@ -57,28 +68,28 @@ fun PantallaProducto(id: Int, onNavigateBack: () -> Unit) {
         },
         containerColor = Color.Black
     ) { padding ->
-        producto?.let { prod ->
+        if (producto == null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(padding),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Producto no encontrado", color = Color.White)
+            }
+        } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
-                    .padding(padding)
                     .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
             ) {
-                // Imagen protegida
-                val painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(context)
-                        .data(prod.imagenUrl)
-                        .crossfade(true)
-                        .error(android.R.drawable.ic_menu_report_image)
-                        .placeholder(android.R.drawable.ic_menu_gallery)
-                        .build()
-                )
-
                 Image(
-                    painter = painter,
-                    contentDescription = prod.nombre,
+                    painter = rememberAsyncImagePainter(producto.imagenUrl),
+                    contentDescription = producto.nombre,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(250.dp),
@@ -86,36 +97,47 @@ fun PantallaProducto(id: Int, onNavigateBack: () -> Unit) {
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
-                    text = prod.nombre,
+                    text = producto.nombre,
                     color = Color(0xFF39FF14),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$${String.format("%.0f", prod.precio)}",
+                    text = producto.descripcion,
+                    color = Color.White,
+                    fontSize = 16.sp
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "Precio: $${producto.precio}",
                     color = Color(0xFF1E90FF),
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(8.dp)
+                    fontWeight = FontWeight.Bold
                 )
-                Text(
-                    text = prod.descripcion,
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = "Categoría: ${prod.categoria}",
-                    color = Color.Gray,
-                    fontSize = 12.sp
-                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    onClick = {
+                        carritoVM.agregarProductoAlCarrito(
+                            producto.nombre,
+                            producto.precio,
+                            producto.imagenUrl
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF39FF14)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                ) {
+                    Text("🛒 Agregar al carrito", color = Color.Black, fontWeight = FontWeight.Bold)
+                }
             }
-        } ?: Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = Color(0xFF39FF14))
         }
     }
 }

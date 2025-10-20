@@ -20,3 +20,4 @@ class CarritoRepository(private val dao: CarritoDao) {
         dao.vaciarCarrito()
     }
 }
+
