@@ -26,14 +26,27 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        fun obtenerBaseDatos(context: Context): AppDatabase {
+        /**
+         * Obtiene una instancia singleton de la base de datos. Este método se
+         * mantiene para compatibilidad con versiones anteriores del código. Internamente
+         * delega a [getDatabase].
+         */
+        fun obtenerBaseDatos(context: Context): AppDatabase = getDatabase(context)
+
+        /**
+         * Devuelve la instancia única de [AppDatabase]. Si ya existe, la retorna,
+         * de lo contrario la crea utilizando [Room.databaseBuilder]. Se utiliza
+         * el mismo nombre de base de datos en toda la aplicación para evitar
+         * inconsistencias.
+         */
+        fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "levelup_db" // ✅ Mantenemos un único nombre de BD
+                    "levelup_db"
                 )
-                    .fallbackToDestructiveMigration() // 🔹 Reconstruye si cambió el esquema
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
